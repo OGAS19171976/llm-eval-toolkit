@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "llm-eval-toolkit"
+version = "0.1.0"
+description = "把「点估计」升级成「带不确定性的结论」:LLM 应用评估的统计层、指标层、评估集设计与报告"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "TODO: 填你的名字", email = "TODO@example.com" }]
+keywords = ["llm", "evaluation", "rag", "statistics", "mcnemar", "bootstrap", "significance"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+# 运行时只依赖 numpy。见 README「为什么零依赖」。
+dependencies = ["numpy>=1.24"]
+
+[project.optional-dependencies]
+# scipy 只在测试里当交叉验证的裁判出现,不是运行时依赖。
+dev = ["pytest>=7.0", "scipy>=1.10"]
+
+[project.scripts]
+lev = "llm_eval_toolkit.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/TODO/llm-eval-toolkit"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
