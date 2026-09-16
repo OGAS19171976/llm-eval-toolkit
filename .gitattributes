@@ -1,0 +1,13 @@
+# 统一换行:仓库里存 LF,检出时也保持 LF。
+#
+# 不加这个,Windows 上每次提交都会刷一屏 "LF will be replaced by CRLF" 警告,
+# 而且同一个文件在 Windows 与 Linux 上 diff 会整篇变化 —— 评审时根本看不出
+# 真正改了什么。
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.pdf binary
+*.whl binary

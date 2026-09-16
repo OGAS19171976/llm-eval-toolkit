@@ -1,0 +1,35 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    name: ${{ matrix.os }} / py${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # scipy 装在 [dev] 里 —— 它只在**测试**里出现,当独立裁判做交叉验证;
+      # 运行时依赖只有 numpy。
+      - name: 安装
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+
+      # 三个平台都跑,是因为这个库的价值有一半在"在受限环境里也能跑":
+      # 临时目录、路径分隔、控制台编码都必须在三个平台上验过才算数。
+      - name: 测试
+        run: pytest tests/ -q
