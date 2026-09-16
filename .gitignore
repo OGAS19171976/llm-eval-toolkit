@@ -4,6 +4,9 @@ __pycache__/
 .pytest_cache/
 .pytest-tmp/
 .pytest-work-*/
+lev-stability-tmp-*/
+lev-stability-*/
+probe-*/
 .venv/
 dist/
 build/

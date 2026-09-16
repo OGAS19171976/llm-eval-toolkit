@@ -18,6 +18,7 @@ import sys
 
 from .build_evalset import planning
 from .report import compare, view
+from . import stability
 
 USAGE = """lev —— LLM 应用评估工具
 
@@ -25,6 +26,9 @@ USAGE = """lev —— LLM 应用评估工具
   lev compare <基线.json> <候选.json> [选项]     两份结果做配对比较
   lev view <报告.json> --field F -o OUT          把逐题指标 F 顶成主指标
   lev plan --delta 0.05 [--baseline 0.7]         算需要多少题
+  lev stability check --rule gd --spectrum "1,4" 训练步长体检（需要 stability-lens）
+  lev stability predict --quick                  估 λ_max → 预测 η_max → 实测对拍
+  lev stability note diag.json --md report.md    把稳定性结论并进评估报告
 
 例子:
   lev compare old.json new.json --label-a 旧 --label-b 新 --md report.md
@@ -85,6 +89,8 @@ def main(argv: list[str] | None = None) -> int:
         return view.main(rest)
     if command == "plan":
         return _plan(rest)
+    if command == "stability":
+        return stability.main(rest)
 
     print(f"未知子命令:{command!r}\n\n{USAGE}", file=sys.stderr)
     return 2

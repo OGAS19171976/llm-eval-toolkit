@@ -79,6 +79,32 @@ python -m llm_eval_toolkit --help    # 没装包时(把 src 挂到 PYTHONPATH �
 | `metrics` | 检索层 Hit@k / Recall@k / Precision@k / MRR / MAP / NDCG@k;生成层里**可确定性判定**的部分(引用有效性、拒答率) |
 | `build_evalset` | 评估集**设计**:要多少题、标注表生成与校验、标注一致性分析 |
 | `report` | 两份结果的配对比较、显著性标注、文本与 markdown 报告 |
+| `stability` | 训练/微调的**步长体检**（可选依赖 [stability-lens](../stability-lens)）：预测 `η_max`、与实测边界对拍、把结论并进评估报告 |
+
+---
+
+## 顺带回答「这个学习率能不能跑」
+
+评估报告回答的是「模型好不好」，但还有个更前置的问题。它在**跑之前**就有解析答案：
+
+```bash
+lev stability check --rule gd --spectrum "1,4" --eta 0.6    # 退出码 2 = 缝隙
+lev stability note diag.json --md report.md                 # 并进评估报告
+```
+
+`--spectrum` 解释为曲率 `λ(A)`（`gd` 规则内部取 `J = −A`）。
+需要更真实的场景时，`lev stability predict` 会在真实宽表上训一个小网络，
+用 Hessian-向量积 + 幂迭代估 `λ_max`，再与实测稳定边界对拍：
+
+```
+β      预测 η_max = 2(1+β)/λ_max  实测边界  相对偏差
+β=0                     0.355250  0.355225     0.01%
+β=0.5                   0.532874  0.532716     0.03%
+β=0.9                   0.674974  0.674773     0.03%
+```
+
+`stability-lens` 是**可选依赖**：没装它时，`check`/`predict` 会给出安装提示并返回退出码 3，
+其余子命令完全不受影响。
 
 ---
 
