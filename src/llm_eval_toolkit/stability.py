@@ -27,7 +27,9 @@ __all__ = ["main", "load_diagnosis", "render_note", "append_note"]
 
 INSTALL_HINT = (
     "未找到 stability-lens。它是一个零依赖的独立包：\n"
-    "    pip install -e ../stability-lens        # 或用 PYTHONPATH 指向它的目录\n"
+    "    pip install -e ../stability-lens        # 同级目录（本地开发）\n"
+    "    pip install git+https://github.com/OGAS19171976/stability-lens.git\n"
+    "    # 或者用 PYTHONPATH 指向它的目录\n"
     "缺少它时 `lev stability check/predict` 不可用，其余子命令不受影响。"
 )
 
