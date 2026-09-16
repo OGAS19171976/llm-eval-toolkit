@@ -33,3 +33,21 @@ jobs:
       # 临时目录、路径分隔、控制台编码都必须在三个平台上验过才算数。
       - name: 测试
         run: pytest tests/ -q
+
+      # examples/old.json 与 new.json 是**提交进仓库**的,所以它们会随代码
+      # 改动而悄悄失效:比如报告的逐题字段改名了、或者比较逻辑变了,
+      # 而示例文件还是旧的。
+      #
+      # 两步:先生成一遍、确认与提交的副本**逐字节一致**
+      # (说明生成器没漂移、也说明行尾是 LF);再照着 README 真跑一次那条命令。
+      - name: 示例生成器是确定性的,且与提交的副本一致
+        run: |
+          python examples/make_examples.py
+          git diff --exit-code -- examples/old.json examples/new.json
+
+      # 这一步顺带验证了 Windows 上的控制台编码:报告里全是中文与 ✅/❌,
+      # GBK 控制台如果不切成 UTF-8,这里会直接抛 UnicodeEncodeError。
+      - name: README 里那条 compare 命令
+        run: >-
+          lev compare examples/old.json examples/new.json
+          --metrics ok --label-a v1 --label-b v2
