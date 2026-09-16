@@ -19,9 +19,10 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, Sequence
 
 __all__ = ["main", "load_diagnosis", "render_note", "append_note"]
 
@@ -126,6 +127,38 @@ def append_note(md_path: str | Path, data: dict[str, Any]) -> Path:
 # ===========================================================================
 # CLI
 # ===========================================================================
+# argparse 与「以 - 开头的取值」
+# ===========================================================================
+# `--spectrum "-1,-4"` 是最自然的写法，但 Python < 3.14 的 argparse 只把
+# **纯负数**字面量（`^-\d+$|^-\d*\.\d+$`）当成取值；`-1,-4` 带逗号、
+# `-1+3i` 带 i 都不匹配，于是被判成选项，直接
+# `error: argument --spectrum: expected one argument`。
+# Python 3.14 删掉了这个判定，所以开发机上永远看不到 —— 只有 3.10~3.13 才暴露。
+#
+# 修法与 stability-lens 那边一致：进 argparse 之前改写成 `--opt=<取值>`。
+# 改写条件刻意收紧成「负号后跟数字或小数点」，这样用户漏写值
+# （`--spectrum --eta 0.5`）时仍然老实报错，不会被静默吞掉。
+_DASH_VALUE_OPTIONS = frozenset({"--spectrum"})
+_DASH_VALUE_RE = re.compile(r"^-[.\d]")
+
+
+def normalize_dash_values(argv: Sequence[str]) -> list[str]:
+    """把 `--opt -1,-4` 改写成 `--opt=-1,-4`，规避旧版 argparse 的判定。"""
+    items = list(argv)
+    out: list[str] = []
+    index = 0
+    while index < len(items):
+        token = items[index]
+        if (token in _DASH_VALUE_OPTIONS and index + 1 < len(items)
+                and _DASH_VALUE_RE.match(items[index + 1])):
+            out.append(f"{token}={items[index + 1]}")
+            index += 2
+            continue
+        out.append(token)
+        index += 1
+    return out
+
+
 def _check(argv: list[str]) -> int:
     sl = _load()
     if sl is None:
@@ -139,7 +172,7 @@ def _check(argv: list[str]) -> int:
     ap.add_argument("--beta", type=float, default=0.9)
     ap.add_argument("--lambda-max", type=float, default=1.0, dest="lambda_max")
     ap.add_argument("--json", action="store_true")
-    args = ap.parse_args(argv)
+    args = ap.parse_args(normalize_dash_values(argv))
 
     from stability_lens import report
     from stability_lens.diagnose import (diagnose_euler, diagnose_gd,

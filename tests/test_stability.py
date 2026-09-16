@@ -119,6 +119,42 @@ class TestLoadDiagnosis:
         assert stability.load_diagnosis(p)["rule"] == "gd"
 
 
+class TestNormalizeDashValues:
+    """``--spectrum "-1,-4"`` 在 Python < 3.14 上会被 argparse 判成选项。
+
+    CPython 3.14 删掉了「纯负数才算取值」的判定，所以开发机上永远看不到；
+    3.10~3.13 上 `lev stability check --spectrum "-1,-4"` 直接
+    `error: argument --spectrum: expected one argument`。
+    """
+
+    def test_rewrites_dash_leading_values(self):
+        norm = stability.normalize_dash_values
+        assert norm(["--spectrum", "-1,-4"]) == ["--spectrum=-1,-4"]
+        assert norm(["--spectrum", "-1+3i,-2"]) == ["--spectrum=-1+3i,-2"]
+        assert norm(["check", "--spectrum", "-2"]) == ["check", "--spectrum=-2"]
+
+    def test_leaves_everything_else_alone(self):
+        norm = stability.normalize_dash_values
+        assert norm(["--spectrum", "1,4"]) == ["--spectrum", "1,4"]
+        assert norm(["--spectrum=-1,-4"]) == ["--spectrum=-1,-4"]
+        assert norm(["--eta", "-0.5"]) == ["--eta", "-0.5"]
+        assert norm([]) == []
+
+    def test_does_not_swallow_a_missing_value(self):
+        """漏写值时必须仍然报错，不能被"顺手修好"成别的意思。"""
+        norm = stability.normalize_dash_values
+        assert norm(["--spectrum", "--json"]) == ["--spectrum", "--json"]
+        assert norm(["--spectrum"]) == ["--spectrum"]
+
+    @pytest.mark.skipif(stability._load() is None, reason="需要 stability-lens")
+    def test_check_accepts_negative_spectrum_end_to_end(self, capsys):
+        code = cli.main(["stability", "check", "--rule", "euler",
+                         "--spectrum", "-1,-4", "--json"])
+        assert code == 0
+        payload = json.loads(capsys.readouterr().out)
+        assert payload["eta_max"] == pytest.approx(0.5)
+
+
 class TestCli:
     def test_note_roundtrip(self, wd: Path):
         diag = wd / "diag.json"
