@@ -85,7 +85,7 @@ lev compare examples/old.json examples/new.json --label-a v1 --label-b v2
 
 ---
 
-## 四个模块
+## 六个模块
 
 | 模块 | 做什么 |
 |---|---|
@@ -94,6 +94,7 @@ lev compare examples/old.json examples/new.json --label-a v1 --label-b v2
 | `build_evalset` | 评估集**设计**:要多少题、标注表生成与校验、标注一致性分析 |
 | `report` | 两份结果的配对比较、显著性标注、文本与 markdown 报告 |
 | `stability` | 训练/微调的**步长体检**（可选依赖 `stability-lens`）：预测 `η_max`、与实测边界对拍、把结论并进评估报告 |
+| `llm` | 真实模型客户端：对话 / 向量化 / 重排 / 列模型。**标准库实现**，密钥只从环境变量读 |
 
 > ⚠️ `stability-lens` 是**同级的另一个本地包,没有发布到 PyPI** —— 从 GitHub
 > clone 本仓库的人是装不上它的。本仓库里 `lev stability note`(纯读写
@@ -124,6 +125,58 @@ lev stability note diag.json --md report.md                 # 并进评估报告
 
 `stability-lens` 是**可选依赖**：没装它时，`check`/`predict` 会给出安装提示并返回退出码 3，
 其余子命令完全不受影响。
+
+---
+
+## 接真实模型（`lev llm`）
+
+评估总得有个模型可打。这部分用**标准库**实现，不引入 `requests` / `openai`：
+
+```bash
+export DASHSCOPE_API_KEY=sk-...        # Windows 见下面
+lev llm check                          # 端到端自检：列模型 + 生成 + 向量化
+lev llm models --grep qwen             # 看有哪些模型可用
+lev llm ask "用一句话说明前向 Euler 的绝对稳定域"
+```
+
+实测输出（同一个 key 背后不止一个模型家族）：
+
+```
+端点      https://dashscope.aliyuncs.com/compatible-mode/v1
+模型数    252
+样例      MiniMax-M2.1, MiniMax-M2.5, MiniMax/MiniMax-M2.7, ...
+生成      qwen3.8-flash -> 「可用」 (104 tokens)
+向量化    qwen3.7-text-embedding-flash dim=1024
+```
+
+**密钥只从环境变量读**（`DASHSCOPE_API_KEY`，可用 `LEV_LLM_API_KEY` 覆盖），
+从不从仓库文件读 —— 这样"密钥进 git"在设计上就不可能发生。缺失时报一句人话
+并返回退出码 3，不是 `KeyError`：
+
+```powershell
+# Windows：用户级环境变量（永久），然后**重开终端**
+[Environment]::SetEnvironmentVariable("DASHSCOPE_API_KEY","sk-...","User")
+```
+
+Python 里同样直接可用：
+
+```python
+from llm_eval_toolkit import llm
+
+llm.ask("你好")                                   # 单轮
+llm.chat([{"role": "user", "content": "..."}])    # 多轮，返回 ChatResult(含 usage/latency)
+llm.embed(["文本 A", "文本 B"]).vectors           # 1024 维
+llm.rerank("查询", ["文档1", "文档2"], top_n=2)   # 重排
+llm.list_models()                                 # 可用模型
+```
+
+两处端点不一样，是实测出来的：对话与向量化走 **OpenAI 兼容模式**
+（`/compatible-mode/v1`），而重排只有 **DashScope 原生端点**有
+（兼容模式没有 rerank；原生端点下的 `text-generation/generation` 对同一批模型返 400）。
+同一个 key 打**国际站**会返 401，所以默认端点用的是国内站。
+
+> 测试默认**完全离线**（HTTP 层被替身替换）；真打网络的用例要显式打开：
+> `LEV_LIVE_LLM=1 python -m pytest tests/test_llm.py`。免得每次跑测试都花你的钱。
 
 ---
 
@@ -167,6 +220,12 @@ McNemar 精确检验**以分歧对的数量为条件**,所以:
 跑不了"。scipy **只在测试里**出现,当独立裁判做交叉验证 —— 见
 `tests/test_stats.py`,里面逐位比对了 Wilson、McNemar、BH 的结果,还有
 bootstrap 区间**覆盖率**的实证检查(公式抄错了但看起来正常,只有覆盖率能抓住)。
+
+**连模型客户端也是标准库写的。** `llm.py` 用 `urllib.request` 发那个 POST,
+而不是引入 `requests` / `openai`。理由是同一个:一个"发 JSON、读 JSON"的调用
+不值得把依赖翻一倍 —— 何况 `pip install openai` 会连带拖进一整套你并不需要的
+SDK 表面。密钥只从环境变量读(**从不从仓库文件读**),所以"密钥进 git"在
+设计上就不可能发生。
 
 **"不显著"和"没差异"是两回事。** 两版逐题完全相同时,报告会说"逐题相同",
 而不是"证据不足" —— 前者是差异为 0,样本再多也没用;后者是没测出来,
@@ -235,6 +294,7 @@ pytest tests/ -p no:cacheprovider -p no:tmpdir
 src/llm_eval_toolkit/
 ├── stats.py              统计基础(零第三方依赖,除 numpy)
 ├── cli.py                lev 命令
+├── llm.py                真实模型客户端(标准库 urllib;密钥只读环境变量)
 ├── metrics/
 │   ├── retrieval.py      Hit@k / Recall@k / MRR / NDCG@k
 │   └── generation.py     引用有效性 / 拒答率(可确定性判定的部分)

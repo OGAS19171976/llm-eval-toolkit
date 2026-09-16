@@ -18,7 +18,7 @@ import sys
 
 from .build_evalset import planning
 from .report import compare, view
-from . import stability
+from . import llm, stability
 
 USAGE = """lev —— LLM 应用评估工具
 
@@ -29,12 +29,16 @@ USAGE = """lev —— LLM 应用评估工具
   lev stability check --rule gd --spectrum "1,4" 训练步长体检（需要 stability-lens）
   lev stability predict --quick                  估 λ_max → 预测 η_max → 实测对拍
   lev stability note diag.json --md report.md    把稳定性结论并进评估报告
+  lev llm check                                  真实模型自检（需要 DASHSCOPE_API_KEY）
+  lev llm models [--grep qwen]                   列出可用模型
+  lev llm ask "问题" [--model M]                 问一次
 
 例子:
   lev compare old.json new.json --label-a 旧 --label-b 新 --md report.md
   lev view report.json --field card_hit_top3 --gate expect_card -o top3.json
   lev compare top1.json top3.json --metrics ok --label-a top-1 --label-b top-3
   lev plan --delta 0.05 --baseline 0.7
+  lev llm check
 
 每个子命令都支持 -h 查看自己的选项。
 """
@@ -91,6 +95,8 @@ def main(argv: list[str] | None = None) -> int:
         return _plan(rest)
     if command == "stability":
         return stability.main(rest)
+    if command == "llm":
+        return llm.main(rest)
 
     print(f"未知子命令:{command!r}\n\n{USAGE}", file=sys.stderr)
     return 2

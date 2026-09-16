@@ -25,6 +25,10 @@ stability
     训练/微调的**步长体检**(可选依赖 stability-lens)。缺失时只有
     check / predict 不可用,note(纯读写 JSON / Markdown)照常工作 ——
     所以它内部是懒加载的,import 本包不会因为缺它而失败。
+llm
+    真实模型客户端。**只用标准库**(urllib)实现,不引入 requests / openai ——
+    评估基础设施里最不划算的就是为了发一个 POST 把依赖翻倍。
+    密钥只从环境变量读(`DASHSCOPE_API_KEY`),不从仓库文件读。
 
 设计约束
 --------
@@ -32,17 +36,18 @@ stability
 
 * 评估基础设施最不该出现的情况就是"装不上包所以跑不了";
 * 没有 scipy 这一条还有个附带好处 —— 所有公式都在明处,评审者能读;
-* scipy 只在**测试**里出现,当独立裁判做交叉验证(见 tests/test_stats.py)。
+* scipy 只在**测试**里出现,当独立裁判做交叉验证(见 tests/test_stats.py);
+* `llm` 的 HTTP 也用 urllib 自己写 —— 一个 POST 不值得引入 requests。
 
 模块间不许有循环依赖:`stats` 是叶子,`build_evalset` 和 `report` 依赖它,
-`metrics` 只依赖标准库。
+`metrics` / `llm` 只依赖标准库。
 """
 
 from __future__ import annotations
 
 __version__ = "0.1.0"
 
-from . import build_evalset, metrics, report, stability, stats   # noqa: F401
+from . import build_evalset, llm, metrics, report, stability, stats   # noqa: F401
 
-__all__ = ["stats", "metrics", "build_evalset", "report", "stability",
+__all__ = ["stats", "metrics", "build_evalset", "report", "stability", "llm",
            "__version__"]
