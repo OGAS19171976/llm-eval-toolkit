@@ -71,6 +71,20 @@ python -m llm_eval_toolkit --help    # 没装包时(把 src 挂到 PYTHONPATH �
 
 ---
 
+## 先跑起来看看
+
+```bash
+python examples/make_examples.py                              # 生成一对示例报告
+lev compare examples/old.json examples/new.json --label-a v1 --label-b v2
+```
+
+输出会同时展示三种结论 —— **显著改善 / 证据不足 / 逐题相同** —— 以及为什么
+后两者必须说成不同的话。逐条解释见 [`examples/README.md`](examples/README.md)。
+
+方法论长文(可直接对外发布):[`docs/point-estimates-lie.md`](docs/point-estimates-lie.md)。
+
+---
+
 ## 四个模块
 
 | 模块 | 做什么 |

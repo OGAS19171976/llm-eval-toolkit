@@ -1,0 +1,371 @@
+{
+  "summary": {
+    "total": 60,
+    "solved": 54,
+    "family_hit": 55,
+    "card_hit_top1": 40
+  },
+  "seconds_total": 13.1,
+  "records": [
+    {
+      "id": "q00",
+      "ok": false,
+      "family_hit": true,
+      "card_hit_top1": false
+    },
+    {
+      "id": "q01",
+      "ok": false,
+      "family_hit": true,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q02",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q03",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": false
+    },
+    {
+      "id": "q04",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q05",
+      "ok": true,
+      "family_hit": false,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q06",
+      "ok": true,
+      "family_hit": false,
+      "card_hit_top1": false
+    },
+    {
+      "id": "q07",
+      "ok": true,
+      "family_hit": false,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q08",
+      "ok": true,
+      "family_hit": false,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q09",
+      "ok": true,
+      "family_hit": false,
+      "card_hit_top1": false
+    },
+    {
+      "id": "q10",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q11",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q12",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": false
+    },
+    {
+      "id": "q13",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q14",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q15",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": false
+    },
+    {
+      "id": "q16",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q17",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q18",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": false
+    },
+    {
+      "id": "q19",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q20",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q21",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": false
+    },
+    {
+      "id": "q22",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q23",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q24",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": false
+    },
+    {
+      "id": "q25",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q26",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q27",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": false
+    },
+    {
+      "id": "q28",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q29",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q30",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": false
+    },
+    {
+      "id": "q31",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q32",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q33",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": false
+    },
+    {
+      "id": "q34",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q35",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q36",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": false
+    },
+    {
+      "id": "q37",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q38",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q39",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": false
+    },
+    {
+      "id": "q40",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q41",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q42",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": false
+    },
+    {
+      "id": "q43",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q44",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q45",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": false
+    },
+    {
+      "id": "q46",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q47",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q48",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": false
+    },
+    {
+      "id": "q49",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q50",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q51",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": false
+    },
+    {
+      "id": "q52",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q53",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q54",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": false
+    },
+    {
+      "id": "q55",
+      "ok": true,
+      "family_hit": true,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q56",
+      "ok": false,
+      "family_hit": true,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q57",
+      "ok": false,
+      "family_hit": true,
+      "card_hit_top1": false
+    },
+    {
+      "id": "q58",
+      "ok": false,
+      "family_hit": true,
+      "card_hit_top1": true
+    },
+    {
+      "id": "q59",
+      "ok": false,
+      "family_hit": true,
+      "card_hit_top1": true
+    }
+  ]
+}
