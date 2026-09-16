@@ -21,6 +21,10 @@ build_evalset
     标注者之间一致性够不够。
 report
     把两份评估结果做配对比较,输出带置信区间与显著性标注的报告。
+stability
+    训练/微调的**步长体检**(可选依赖 stability-lens)。缺失时只有
+    check / predict 不可用,note(纯读写 JSON / Markdown)照常工作 ——
+    所以它内部是懒加载的,import 本包不会因为缺它而失败。
 
 设计约束
 --------
@@ -38,6 +42,7 @@ from __future__ import annotations
 
 __version__ = "0.1.0"
 
-from . import build_evalset, metrics, report, stats   # noqa: F401
+from . import build_evalset, metrics, report, stability, stats   # noqa: F401
 
-__all__ = ["stats", "metrics", "build_evalset", "report", "__version__"]
+__all__ = ["stats", "metrics", "build_evalset", "report", "stability",
+           "__version__"]

@@ -93,7 +93,12 @@ lev compare examples/old.json examples/new.json --label-a v1 --label-b v2
 | `metrics` | 检索层 Hit@k / Recall@k / Precision@k / MRR / MAP / NDCG@k;生成层里**可确定性判定**的部分(引用有效性、拒答率) |
 | `build_evalset` | 评估集**设计**:要多少题、标注表生成与校验、标注一致性分析 |
 | `report` | 两份结果的配对比较、显著性标注、文本与 markdown 报告 |
-| `stability` | 训练/微调的**步长体检**（可选依赖 [stability-lens](../stability-lens)）：预测 `η_max`、与实测边界对拍、把结论并进评估报告 |
+| `stability` | 训练/微调的**步长体检**（可选依赖 `stability-lens`）：预测 `η_max`、与实测边界对拍、把结论并进评估报告 |
+
+> ⚠️ `stability-lens` 是**同级的另一个本地包,没有发布到 PyPI** —— 从 GitHub
+> clone 本仓库的人是装不上它的。本仓库里 `lev stability note`(纯读写
+> JSON / Markdown)不依赖它,只有 `check` / `predict` 需要;缺失时命令会
+> 给出明确的安装提示,而不是抛一个看不懂的 ImportError。
 
 ---
 
