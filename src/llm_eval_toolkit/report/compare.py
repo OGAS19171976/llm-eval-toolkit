@@ -44,6 +44,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from .. import stats as S
+from .._io import write_text_lf
 
 # 逐题布尔字段 -> 人话。只出现"两个报告里都有"的那些才会被采用。
 CANDIDATE_METRICS: list[tuple[str, str]] = [
@@ -366,10 +367,7 @@ def main(argv: list[str] | None = None) -> int:
                       rep_a.get("seconds_total"), rep_b.get("seconds_total")))
 
     if args.md:
-        out = Path(args.md)
-        out.parent.mkdir(parents=True, exist_ok=True)
-        out.write_text(render_markdown(res, path_a.name, path_b.name),
-                       encoding="utf-8")
+        out = write_text_lf(args.md, render_markdown(res, path_a.name, path_b.name))
         print(f"\nmarkdown 报告已写入 {out}")
     return 0 if res.comparable else 1
 

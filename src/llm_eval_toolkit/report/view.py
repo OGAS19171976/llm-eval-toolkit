@@ -24,6 +24,8 @@ import argparse
 import json
 from pathlib import Path
 
+from .._io import write_json_lf
+
 
 def make_view(report: dict, field: str, gate: str | None = None) -> tuple[dict, int]:
     """返回 (新的 report, 可比题数)。不改动原对象。"""
@@ -66,9 +68,7 @@ def main(argv: list[str] | None = None) -> int:
         raise SystemExit(f"门禁字段 {args.gate!r} 不存在")
 
     view, comparable = make_view(report, args.field, args.gate)
-    out = Path(args.out)
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps(view, ensure_ascii=False, indent=2), encoding="utf-8")
+    out = write_json_lf(args.out, view)
 
     n_true = sum(1 for r in view["records"] if r["ok"] is True)
     print(f"{src.name}  --{args.field}-->  {out}")

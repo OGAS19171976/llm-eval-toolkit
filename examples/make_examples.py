@@ -23,8 +23,14 @@ summary 写着 51/51,逐题字段却全是 False)。这里从零构造,任何时
 
 from __future__ import annotations
 
-import json
+import sys
 from pathlib import Path
+
+try:
+    from llm_eval_toolkit._io import write_json_lf
+except ImportError:          # 没装包时退到仓库里的 src/,让示例开箱即用
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
+    from llm_eval_toolkit._io import write_json_lf
 
 HERE = Path(__file__).resolve().parent
 N = 60
@@ -82,9 +88,7 @@ def build() -> tuple[dict, dict]:
 def main() -> int:
     old, new = build()
     for name, data in (("old.json", old), ("new.json", new)):
-        path = HERE / name
-        path.write_text(json.dumps(data, ensure_ascii=False, indent=2),
-                        encoding="utf-8")
+        path = write_json_lf(HERE / name, data)
         print(f"写出 {path}  ({len(data['records'])} 题)")
 
     print("\n两版的原始比率:")

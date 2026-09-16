@@ -112,7 +112,9 @@ def to_csv(rows, path) -> Path:
     out.parent.mkdir(parents=True, exist_ok=True)
     columns = list(rows[0].keys())
     with out.open("w", encoding="utf-8-sig", newline="") as fh:
-        writer = csv.DictWriter(fh, fieldnames=columns)
+        # lineterminator="\n":csv 模块默认写 CRLF(RFC 4180 允许),但标注表
+        # 是要提交进仓库、要被 diff 的,统一成 LF 才能和 .gitattributes 对上。
+        writer = csv.DictWriter(fh, fieldnames=columns, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
     return out
@@ -121,7 +123,7 @@ def to_csv(rows, path) -> Path:
 def to_jsonl(rows, path) -> Path:
     out = Path(path)
     out.parent.mkdir(parents=True, exist_ok=True)
-    with out.open("w", encoding="utf-8") as fh:
+    with out.open("w", encoding="utf-8", newline="\n") as fh:
         for row in rows:
             fh.write(json.dumps(row, ensure_ascii=False) + "\n")
     return out
